@@ -1,1 +1,1 @@
-## Motionful studio project API upload Images
+## Motionful studio project API
