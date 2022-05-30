@@ -7,7 +7,7 @@ scale_jitter_lo: 0.85
 scale_jitter_up: 1.15
 
 net_type: resnet_101
-init_weights: ../../pretrained/resnet_v1_101.ckpt
+init_weights: weight/resnet/resnet_v1_101.ckpt
 
 location_refinement: true
 locref_huber_loss: true

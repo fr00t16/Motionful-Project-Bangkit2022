@@ -7,7 +7,9 @@ import logging, os, sys, time, threading
 from xml.etree.ElementInclude import include
 import numpy as np
 import tensorflow as tf
-import tensorflow.contrib.slim as tfslim
+print(tf.__version__) #check the tensorflow version
+#import tensorflow.contrib.slim as tfslim 
+import tf_slim as tfslim
 
 #customLibrary
 # this is library for config file
@@ -142,5 +144,5 @@ def train():
 #start train function or method as a main thread
 if __name__ == '__main__':
     train()
-    
+
     
