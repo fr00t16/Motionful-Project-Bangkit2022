@@ -2,21 +2,32 @@
 #creating model
 
 #preconfigured library
+print()
+#protocol buffer issues on at least on aarch64
+# export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
+print('Importing os')
+import os
+os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
+print('importing some core components')
 import imp
-import logging, os, sys, time, threading
+import logging, sys, time, threading
 from xml.etree.ElementInclude import include
 import numpy as np
+print('imporitng tensorflow')
 import tensorflow as tf
 print(tf.__version__) #check the tensorflow version
+print('importing tensorflow slim')
 #import tensorflow.contrib.slim as tfslim 
 import tf_slim as tfslim
 
 #customLibrary
 # this is library for config file
+print('importing custom toolsetLibraries for config loader')
 from toolsetLib.configUtils import conf_load
 from toolsetLib.datasetTool_factory import createDataset as create_dataset
 from toolsetLib.loggingUtils import init_logger
 # this is library for preloading data
+print('importing toolsetLibraries for preloading data')
 from toolsetLib.nnet_toolset_posenet import getBatchSpecs as get_batch_spec
 from toolsetLib.nnet_toolset_Factory import pose_net
 
