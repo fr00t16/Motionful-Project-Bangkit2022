@@ -31,7 +31,7 @@ def getBatchSpecs(config):
         batch_spec[Batch.pairwise_mask] = [batch_size, None, None, num_joints * (num_joints - 1) * 2]
     return batch_spec
 
-class PoseNet:
+class PoseNet: # PoseNet
     def __init__(self, config):
         self.config = config
 
@@ -46,7 +46,7 @@ class PoseNet:
 
         return net, end_points   # net: [batch_size, height, width, num_features]
 
-    def predLayer(own, features, endPoints, reuse=None, no_interm=False, scope='pose'):
+    def predLayer(own, features, endPoints, reuse=None, no_interm=False, scope='pose'): # features: [batch_size, height, width, num_features]
         config = own.config
         numberLayers = re.findall("resnet_([0-9]+)", config.net_type)[0]
         layerName = 'resnet_v1_{}'.format(numberLayers) + '/block{}/unit_{}/bottleneck_v1'
@@ -54,4 +54,71 @@ class PoseNet:
         with tf.variable_scope(scope, reuse=reuse):
             out['part_pred'] = predLayer(config, features, 'part_pred', config.num_joints)
             if config.location_refinement:
-                out['locref_pred'] = predLayer(config, features, 'locref_pred', config.num_joints * 2)
+                out['locref'] = predLayer(config, features, 'locref_pred', config.num_joints * 2)
+            if config.pairwise_predict:
+                out['pairwise_pred'] = predLayer(config, features, 'pairwise_pred', config.num_joints * (config.num_joints - 1) * 2)
+            if config.intermediate_supervision and not no_interm:
+                interm_name = layerName.format(3, config.intermediate_supervision_layer)
+                block_interm_out = endPoints[interm_name]
+                out['part_pred_interm'] = predLayer(config, block_interm_out, 'intermediate_supervision', config.num_joints)
+            
+        return out
+
+    def get_network(own, input): # input: [batch_size, height, width, 3]
+        net, end_points = own.extractFeatures(input)
+        return own.predLayer(own, net, end_points, no_interm=True)
+
+    def test(own, input):
+        # test network or get_network method
+        head = own.get_network(input)
+        return own.add_test_losses(head)
+
+    def addTestLayers(own, head): # head: {'part_pred': ..., 'locref': ..., 'pairwise_pred': ...}
+        probab = tf.sigmoid(head['part_pred'])
+        output = {'part_prob': probab}
+        if own.config.location_refinement:
+            output['locref'] = head['locref']
+        if own.config.pairwise_predict:
+            output['pairwise_pred'] = head['pairwise_pred']
+        return output
+
+    def partDetectionLoss(own, head, batch, locref, pairwise, intermediate):
+        config = own.config
+        weightPartPred = config.weight_part_pred
+        partScoreWeights = batch[Batch.part_score_weights] if weightPartPred else 1.0
+
+        def addPartLoss(predLayer):
+            return tf.losses.sigmoid_cross_entropy(batch[Batch.part_score_targets], head[predLayer], weights=partScoreWeights)
+
+        loss = {}
+        loss['part_loss'] = addPartLoss('part_pred_interm')
+        totalLoss = totalLoss + loss['part_loss_interm']
+
+        if locref: # location refinement
+            locref_pred = head['locref']
+            locref_targets = batch[Batch.locref_targets]
+            locref_weights = batch[Batch.locref_mask]
+
+            loss_function = lossesMLToolkit.huberLoss if config.locref_huber_loss else tf.losses.mean_squared_error
+            loss['locref_loss'] = config.locref_loss_weight * loss_function(locref_targets, locref_pred, locref_weights)
+            totalLoss = totalLoss + loss['locref_loss']
+
+        if pairwise: # pairwise loss
+            pairwise_pred = head['pairwise_pred']
+            pairwise_targets = batch[Batch.pairwise_targets]
+            pairwise_weights = batch[Batch.pairwise_mask]
+
+            loss_function = lossesMLToolkit.huberLoss if config.pairwise_huber_loss else tf.losses.mean_squared_error
+            loss['pairwise_loss'] = config.pairwise_loss_weight * loss_function(pairwise_targets, pairwise_pred, pairwise_weights)
+            totalLoss = totalLoss + loss['pairwise_loss']
+
+        loss['total_loss'] = totalLoss
+        return loss
+
+    def train(own, batches):
+        config = own.config
+        intermediate = config.intermediate_supervision
+        locref = config.location_refinement
+        pairwise = config.pairwise_predict
+        head = own.get_network(batches[Batch.image])
+        return own.partDetectionLoss(head, batches, locref, pairwise, intermediate)

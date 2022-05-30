@@ -38,7 +38,8 @@ def conf_from_file(filename):
     logging.info("Config:\n"+pprint.pformat(conf))
     return conf
 
-def conf_load(filename = "pose_cfg.yaml"):
+def conf_load():
+    filename = "pose_cfg.yaml" #change this if you change the config file name
     if 'POSE_PARAM_PATH' in os.environ:
         filename = os.environ['POSE_PARAM_PATH'] + '/' + filename
     return conf_from_file(filename)
