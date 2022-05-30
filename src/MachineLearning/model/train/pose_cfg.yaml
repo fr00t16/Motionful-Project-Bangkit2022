@@ -1,4 +1,4 @@
-dataset: /path/to/dataset.mat
+dataset: ../dataset/MPII_HumanPoseDataset_SinglePersonDetection/cropped/dataset.mat
 dataset_type: "mpii"
 
 pos_dist_thresh: 17

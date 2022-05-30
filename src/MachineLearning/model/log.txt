@@ -1,8 +1,8 @@
-2022-05-30 12:48:21 Config:
+2022-05-30 14:17:42 Config:
 {'batch_size': 1,
  'crop': False,
  'crop_pad': 0,
- 'dataset': '/path/to/dataset.mat',
+ 'dataset': '../dataset/MPII_HumanPoseDataset_SinglePersonDetection/cropped/dataset.mat',
  'dataset_type': 'mpii',
  'display_iters': 20,
  'fg_fraction': 0.25,

@@ -78,27 +78,28 @@ def get_pairwise_index(j_id, j_id_end, num_joints):
     return (num_joints - 1) * j_id + j_id_end - int(j_id < j_id_end)
 
 class DataItem:
+    print('stub function DataItem()')
     pass
 
 class PoseDataset:
-    def __init__(self, config):
-        self.config = config
-        self.data = self.load.dataset() if config.dataset else []
-        self.num_images = len(self.data)
-        if self.config.mirror:
-            self.symmetric_joints = mirror_joints_map(config.all_joints, config.num_joints)
-        self.curr_img = 0
-        self.set_shuffle(config.shuffle)
-        self.set_pairwise_stats_collect(config.pairwise_stats_collect)
-        if self.config.pairwise_predict:
-            self.pairwise_stats = load_pairwise_stats(self.config)
+    def __init__(own, config):
+        own.config = config
+        own.data = own.load.dataset() if config.dataset else []
+        own.num_images = len(own.data)
+        if own.config.mirror:
+            own.symmetric_joints = mirror_joints_map(config.all_joints, config.num_joints)
+        own.curr_img = 0
+        own.set_shuffle(config.shuffle)
+        own.set_pairwise_stats_collect(config.pairwise_stats_collect)
+        if own.config.pairwise_predict:
+            own.pairwise_stats = load_pairwise_stats(own.config)
 
-    def load_dataset(self):
-        cfg = self.cfg
+    def load_dataset(own):
+        cfg = own.cfg
         file_name = cfg.dataset
         # Load Matlab file dataset annotation
         mlab = sio.loadmat(file_name)
-        self.raw_data = mlab
+        own.raw_data = mlab
         mlab = mlab['dataset']
 
         num_images = mlab.shape[1]
@@ -127,82 +128,82 @@ class PoseDataset:
                 item.crop = extend_crop(crop, cfg.crop_pad, item.im_size)
             data.append(item)
 
-        self.has_gt = has_gt
+        own.has_gt = has_gt
         return data
 
-    def num_keypoints(self):
-        return self.cfg.num_joints
+    def num_keypoints(own):
+        return own.cfg.num_joints
 
-    def set_test_mode(self, test_mode):
-        self.has_gt = not test_mode
+    def set_test_mode(own, test_mode):
+        own.has_gt = not test_mode
 
 
-    def set_shuffle(self, shuffle):
-        self.shuffle = shuffle
+    def set_shuffle(own, shuffle):
+        own.shuffle = shuffle
         if not shuffle:
-            assert not self.cfg.mirror
-            self.image_indices = np.arange(self.num_images)
+            assert not own.cfg.mirror
+            own.image_indices = np.arange(own.num_images)
 
 
-    def set_pairwise_stats_collect(self, pairwise_stats_collect):
-        self.pairwise_stats_collect = pairwise_stats_collect
-        if self.pairwise_stats_collect:
-            assert self.get_scale() == 1.0
+    def set_pairwise_stats_collect(own, pairwise_stats_collect):
+        own.pairwise_stats_collect = pairwise_stats_collect
+        if own.pairwise_stats_collect:
+            assert own.get_scale() == 1.0
 
 
-    def mirror_joint_coords(self, joints, image_width):
+    def mirror_joint_coords(own, joints, image_width):
         # horizontally flip the x-coordinate, keep y unchanged
         joints[:, 1] = image_width - joints[:, 1] - 1
         return joints
 
 
-    def mirror_joints(self, joints, symmetric_joints, image_width):
+    def mirror_joints(own, joints, symmetric_joints, image_width):
         # joint ids are 0 indexed
         res = np.copy(joints)
-        res = self.mirror_joint_coords(res, image_width)
+        res = own.mirror_joint_coords(res, image_width)
         # swap the joint_id for a symmetric one
         joint_id = joints[:, 0].astype(int)
         res[:, 0] = symmetric_joints[joint_id]
         return res
 
 
-    def shuffle_images(self):
-        num_images = self.num_images
-        if self.cfg.mirror:
+    def shuffle_images(own):
+        num_images = own.num_images
+        if own.cfg.mirror:
             image_indices = np.random.permutation(num_images * 2)
-            self.mirrored = image_indices >= num_images
-            image_indices[self.mirrored] = image_indices[self.mirrored] - num_images
-            self.image_indices = image_indices
+            own.mirrored = image_indices >= num_images
+            image_indices[own.mirrored] = image_indices[own.mirrored] - num_images
+            own.image_indices = image_indices
         else:
-            self.image_indices = np.random.permutation(num_images)
+            own.image_indices = np.random.permutation(num_images)
 
 
-    def num_training_samples(self):
-        num = self.num_images
-        if self.cfg.mirror:
+    def num_training_samples(own):
+        num = own.num_images
+        if own.cfg.mirror:
             num *= 2
         return num
 
 
-    def next_training_sample(self):
-        if self.curr_img == 0 and self.shuffle:
-            self.shuffle_images()
+    def next_training_sample(own):
+        if own.curr_img == 0 and own.shuffle:
+            own.shuffle_images()
 
-        curr_img = self.curr_img
-        self.curr_img = (self.curr_img + 1) % self.num_training_samples()
+        curr_img = own.curr_img
+        own.curr_img = (own.curr_img + 1) % own.num_training_samples()
 
-        imidx = self.image_indices[curr_img]
-        mirror = self.cfg.mirror and self.mirrored[curr_img]
+        imidx = own.image_indices[curr_img]
+        mirror = own.cfg.mirror and own.mirrored[curr_img]
 
         return imidx, mirror
 
 
-    def get_training_sample(self, imidx):
-        return self.data[imidx]
+    def get_training_sample(own, imidx):
+        return own.data[imidx]
 
 
-    def get_scale(self):
-        cfg = self.cfg
+    def get_scale(own):
+        cfg = own.cfg
         scale = cfg.global_scale
         if hasattr(cfg, 'scale_jitter_lo') and hasattr(cfg, 'scale_jitter_up'):
             scale_jitter = rand.uniform(cfg.scale_jitter_lo, cfg.scale_jitter_up)
@@ -210,19 +211,19 @@ class PoseDataset:
         return scale
 
 
-    def next_batch(self):
+    def next_batch(own):
         while True:
-            imidx, mirror = self.next_training_sample()
-            data_item = self.get_training_sample(imidx)
-            scale = self.get_scale()
+            imidx, mirror = own.next_training_sample()
+            data_item = own.get_training_sample(imidx)
+            scale = own.get_scale()
 
-            if not self.is_valid_size(data_item.im_size, scale):
+            if not own.is_valid_size(data_item.im_size, scale):
                 continue
 
-            return self.make_batch(data_item, scale, mirror)
+            return own.make_batch(data_item, scale, mirror)
 
 
-    def is_valid_size(self, image_size, scale):
+    def is_valid_size(own, image_size, scale):
         im_width = image_size[2]
         im_height = image_size[1]
 
@@ -230,8 +231,8 @@ class PoseDataset:
         if im_height < max_input_size or im_width < max_input_size:
             return False
 
-        if hasattr(self.cfg, 'max_input_size'):
-            max_input_size = self.cfg.max_input_size
+        if hasattr(own.cfg, 'max_input_size'):
+            max_input_size = own.cfg.max_input_size
             input_width = im_width * scale
             input_height = im_height * scale
             if input_height * input_width > max_input_size * max_input_size:
@@ -240,19 +241,19 @@ class PoseDataset:
         return True
 
 
-    def make_batch(self, data_item, scale, mirror):
+    def make_batch(own, data_item, scale, mirror):
         im_file = data_item.im_path
         logging.debug('image %s', im_file)
         logging.debug('mirror %r', mirror)
         image = imread(im_file, mode='RGB')
 
-        if self.has_gt:
+        if own.has_gt:
             joints = np.copy(data_item.joints)
 
-        if self.cfg.crop:
+        if own.cfg.crop:
             crop = data_item.crop
             image = image[crop[1]:crop[3] + 1, crop[0]:crop[2] + 1, :]
-            if self.has_gt:
+            if own.has_gt:
                 joints[:, 1:3] -= crop[0:2].astype(joints.dtype)
 
         img = imresize(image, scale) if scale != 1 else image
@@ -263,11 +264,11 @@ class PoseDataset:
 
         batch = {Batch.inputs: img}
 
-        if self.has_gt:
-            stride = self.cfg.stride
+        if own.has_gt:
+            stride = own.cfg.stride
 
             if mirror:
-                joints = [self.mirror_joints(person_joints, self.symmetric_joints, image.shape[1]) for person_joints in
+                joints = [own.mirror_joints(person_joints, own.symmetric_joints, image.shape[1]) for person_joints in
                           joints]
 
             sm_size = np.ceil(scaled_img_size / (stride * 2)).astype(int) * 2
@@ -275,9 +276,9 @@ class PoseDataset:
             scaled_joints = [person_joints[:, 1:3] * scale for person_joints in joints]
 
             joint_id = [person_joints[:, 0].astype(int) for person_joints in joints]
-            batch = self.compute_targets_and_weights(joint_id, scaled_joints, data_item, sm_size, scale, batch)
+            batch = own.compute_targets_and_weights(joint_id, scaled_joints, data_item, sm_size, scale, batch)
 
-            if self.pairwise_stats_collect:
+            if own.pairwise_stats_collect:
                 data_item.pairwise_stats = collect_pairwise_stats(joint_id, scaled_joints)
 
         batch = {key: data_to_input(data) for (key, data) in batch.items()}
@@ -287,20 +288,20 @@ class PoseDataset:
         return batch
 
 
-    def set_locref(self, locref_map, locref_mask, locref_scale, i, j, j_id, dx, dy):
+    def set_locref(own, locref_map, locref_mask, locref_scale, i, j, j_id, dx, dy):
         locref_mask[j, i, j_id * 2 + 0] = 1
         locref_mask[j, i, j_id * 2 + 1] = 1
         locref_map[j, i, j_id * 2 + 0] = dx * locref_scale
         locref_map[j, i, j_id * 2 + 1] = dy * locref_scale
 
 
-    def set_pairwise_map(self, pairwise_map, pairwise_mask, i, j, j_id, j_id_end, coords, pt_x, pt_y, person_id, k_end):
-        num_joints = self.cfg.num_joints
+    def set_pairwise_map(own, pairwise_map, pairwise_mask, i, j, j_id, j_id_end, coords, pt_x, pt_y, person_id, k_end):
+        num_joints = own.cfg.num_joints
         joint_pt = coords[person_id][k_end, :]
         j_x_end = np.asscalar(joint_pt[0])
         j_y_end = np.asscalar(joint_pt[1])
         pair_id = get_pairwise_index(j_id, j_id_end, num_joints)
-        stats = self.pairwise_stats[(j_id, j_id_end)]
+        stats = own.pairwise_stats[(j_id, j_id_end)]
         dx = j_x_end - pt_x
         dy = j_y_end - pt_y
         pairwise_mask[j, i, pair_id * 2 + 0] = 1
@@ -309,10 +310,10 @@ class PoseDataset:
         pairwise_map[j, i, pair_id * 2 + 1] = (dy - stats["mean"][1]) / stats["std"][1]
 
 
-    def compute_targets_and_weights(self, joint_id, coords, data_item, size, scale, batch):
-        stride = self.cfg.stride
-        dist_thresh = self.cfg.pos_dist_thresh * scale
-        num_joints = self.cfg.num_joints
+    def compute_targets_and_weights(own, joint_id, coords, data_item, size, scale, batch):
+        stride = own.cfg.stride
+        dist_thresh = own.cfg.pos_dist_thresh * scale
+        num_joints = own.cfg.num_joints
         half_stride = stride / 2
         scmap = np.zeros(cat([size, arr([num_joints])]))
 
@@ -357,33 +358,33 @@ class PoseDataset:
 
                         if dist <= dist_thresh_sq:
                             dist = dx ** 2 + dy ** 2
-                            locref_scale = 1.0 / self.cfg.locref_stdev
+                            locref_scale = 1.0 / own.cfg.locref_stdev
                             current_normalized_dist = dist * locref_scale ** 2
                             prev_normalized_dist = locref_map[j, i, j_id * 2 + 0] ** 2 + \
                                                    locref_map[j, i, j_id * 2 + 1] ** 2
                             update_scores = (scmap[j, i, j_id] == 0) or prev_normalized_dist > current_normalized_dist
-                            if self.cfg.location_refinement and update_scores:
-                                self.set_locref(locref_map, locref_mask, locref_scale, i, j, j_id, dx, dy)
-                            if self.cfg.pairwise_predict and update_scores:
+                            if own.cfg.location_refinement and update_scores:
+                                own.set_locref(locref_map, locref_mask, locref_scale, i, j, j_id, dx, dy)
+                            if own.cfg.pairwise_predict and update_scores:
                                 for k_end, j_id_end in enumerate(joint_id[person_id]):
                                     if k != k_end:
-                                        self.set_pairwise_map(pairwise_map, pairwise_mask, i, j, j_id, j_id_end,
+                                        own.set_pairwise_map(pairwise_map, pairwise_mask, i, j, j_id, j_id_end,
                                                               coords, pt_x, pt_y, person_id, k_end)
                             scmap[j, i, j_id] = 1
 
-        scmap_weights = self.compute_scmap_weights(scmap.shape, joint_id, data_item)
+        scmap_weights = own.compute_scmap_weights(scmap.shape, joint_id, data_item)
 
         # Update batch
         batch.update({
             Batch.part_score_targets: scmap,
             Batch.part_score_weights: scmap_weights
         })
-        if self.cfg.location_refinement:
+        if own.cfg.location_refinement:
             batch.update({
                 Batch.locref_targets: locref_map,
                 Batch.locref_mask: locref_mask
             })
-        if self.cfg.pairwise_predict:
+        if own.cfg.pairwise_predict:
             batch.update({
                 Batch.pairwise_targets: pairwise_map,
                 Batch.pairwise_mask: pairwise_mask
@@ -392,8 +393,8 @@ class PoseDataset:
         return batch
 
 
-    def compute_scmap_weights(self, scmap_shape, joint_id, data_item):
-        cfg = self.cfg
+    def compute_scmap_weights(own, scmap_shape, joint_id, data_item):
+        cfg = own.cfg
         if cfg.weigh_only_present_joints:
             weights = np.zeros(scmap_shape)
             for person_joint_id in joint_id:
