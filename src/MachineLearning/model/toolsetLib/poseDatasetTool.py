@@ -7,7 +7,8 @@ from numpy import concatenate as cat
 import scipy.io as sio
 #from scipy.misc import imread, imresize
 # This doesn't work due to https://stackoverflow.com/questions/9298665/cannot-import-scipy-misc-imread
-from matplotlib.pyplot import imread, imresize
+from skimage.transform import resize as imresize
+from matplotlib.pyplot import imread
 
 class Batch(Enum):
     inputs = 0

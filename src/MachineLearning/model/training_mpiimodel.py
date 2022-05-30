@@ -9,11 +9,14 @@ print('Importing os')
 import os, platform
 print('checking and installing some components')
 if platform.processor() == 'x86_64':
-    os.system('pip3 install numpy scikit-image pillow scipy pyyaml matplotlib cython tensorflow easydict munkres')
+    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow easydict munkres tf_slim ')
+    #os.system('pip3 install scipy==1.1.0') #fix some scipy.misc issues !+ doesnt work on current version python3.10
 elif platform.processor() == 'aarch64':
-    os.system('pip3 install numpy scikit-image pillow scipy pyyaml matplotlib cython tensorflow-aarch64 easydict munkres')
+    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow-aarch64 easydict munkres tf_slim ')
+    #os.system('pip3 install scipy==1.1.0') #fix some scipy.misc issues !+ doesnt work on current version python3.10
 else :
     raise ValueError("Processor must be 'x86_64' or 'aarch64'")
+    print(platform.processor())
     exit()
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 print('importing some core components')
@@ -43,15 +46,15 @@ print('importing toolsetLibraries for preloading data')
 from toolsetLib.nnet_toolset_posenet import getBatchSpecs as get_batch_spec
 from toolsetLib.nnet_toolset_Factory import pose_net
 
-class learningRate(obj):
+class learningRate(object):
     def __init__(own, config): 
         own.steps = config.multi_step
         own.current_step = 0
     def get_lr(own, iteration):
-        lr = own.steps[own.current_step][0]
+        currentLearningRate = own.steps[own.current_step][0]
         if iteration == own.steps[own.current_step][1]:
             own.current_step += 1
-        return lr
+        return currentLearningRate
 
 def preloadSetup(BatchesSpecs):
     # a placeholder for temporary data

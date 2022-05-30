@@ -95,4 +95,3 @@ def arrowRender(conf, image, pos, arrows):
 
 def waitButton():
     plt.waitforbuttonpress(timeout=1)
-    
