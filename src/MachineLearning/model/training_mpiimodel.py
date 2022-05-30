@@ -15,12 +15,12 @@ elif platform.processor() == 'aarch64':
     os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow-aarch64 easydict munkres tf_slim ')
     #os.system('pip3 install scipy==1.1.0') #fix some scipy.misc issues !+ doesnt work on current version python3.10
 else :
-    raise ValueError("Processor must be 'x86_64' or 'aarch64'")
     print(platform.processor())
+    raise ValueError("Processor must be 'x86_64' or 'aarch64'")
     exit()
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 print('importing some core components')
-import importlib as imp
+import importlib as imp #alias for imp implementation due to the fact imp will be remove at python 3.12
 import logging, sys, time, threading
 from xml.etree.ElementInclude import include
 import numpy as np
