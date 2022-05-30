@@ -6,15 +6,27 @@ print()
 #protocol buffer issues on at least on aarch64
 # export PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
 print('Importing os')
-import os
+import os, platform
+print('checking and installing some components')
+if platform.processor() == 'x86_64':
+    os.system('pip3 install numpy scikit-image pillow scipy pyyaml matplotlib cython tensorflow easydict munkres')
+elif platform.processor() == 'aarch64':
+    os.system('pip3 install numpy scikit-image pillow scipy pyyaml matplotlib cython tensorflow-aarch64 easydict munkres')
+else :
+    raise ValueError("Processor must be 'x86_64' or 'aarch64'")
+    exit()
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 print('importing some core components')
 import imp
 import logging, sys, time, threading
 from xml.etree.ElementInclude import include
 import numpy as np
-print('imporitng tensorflow')
+print('importing tensorflow')
 import tensorflow as tf
+print('disabling CUDA support...')
+#TF_CUDNN_USE_AUTOTUNE=0 CUDA_VISIBLE_DEVICES=0
+os.environ['TF_CUDNN_USE_AUTOTUNE'] = '0'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 print(tf.__version__) #check the tensorflow version
 print('importing tensorflow slim')
 #import tensorflow.contrib.slim as tfslim 

@@ -5,7 +5,9 @@ import numpy as np
 from numpy import array as arr
 from numpy import concatenate as cat
 import scipy.io as sio
-from scipy.misc import imread, imresize
+#from scipy.misc import imread, imresize
+# This doesn't work due to https://stackoverflow.com/questions/9298665/cannot-import-scipy-misc-imread
+from matplotlib.pyplot import imread, imresize
 
 class Batch(Enum):
     inputs = 0
