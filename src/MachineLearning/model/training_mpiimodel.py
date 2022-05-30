@@ -20,7 +20,7 @@ else :
     exit()
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 print('importing some core components')
-import imp
+import importlib as imp
 import logging, sys, time, threading
 from xml.etree.ElementInclude import include
 import numpy as np
