@@ -1,3 +1,4 @@
+#function or method about calculating loss using huber function
 import tensorflow as tf
 from tensorflow.python.ops import math_ops
 from tensorflow.python.framework import ops

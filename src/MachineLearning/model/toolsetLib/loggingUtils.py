@@ -1,5 +1,5 @@
 import logging as log
-
+#this is a utility function for logging
 def init_logger():
     log.basicConfig(filename='log.txt', filemode='w',
                     datefmt='%Y-%m-%d %H:%M:%S',
