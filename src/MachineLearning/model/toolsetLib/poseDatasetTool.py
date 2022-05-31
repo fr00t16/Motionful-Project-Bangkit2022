@@ -3,6 +3,7 @@ import logging as log
 import random as rnd
 from enum import Enum
 from re import I
+from turtle import distance
 import numpy as np
 from numpy import array as arr
 from numpy import concatenate as cat
@@ -170,6 +171,75 @@ class PoseDataset:
             scaling *= np.random.uniform(config.scale_jitter_lo, config.scale_jitter_up)
         return scaling
     
+    def setPairwiseStatCollect(own, pairwiseStats):
+        own.pairwiseStats = pairwiseStats
+        if own.pairwiseStats:
+            assert own.getScale() == 1.0
+
+    def computeScMapWeight(own, scMappingShape, jointID, dataPoolItem):
+        config = own.config
+        if config.weight_only_present_joints:
+            weight = np.zeros(scMappingShape)
+            for JointPersonID in jointID:
+                for jID in JointPersonID:
+                    weight[:, :, jID] = 1.0
+        else:
+            weights = np.ones(scMappingShape)
+        return weights
+
+    def computeTargetsandWeights(own, jointsID, coordinate, dataPoolItem, size, scaling, batches):
+        stride = own.config.stride
+        distanceThreshold = own.config.pos_dist_thresh * scaling
+        num_joints = own.config.num_joints
+        num_joints_pair = own.config.num_joints_pair
+        halfStride = stride / 2
+        scMapping = np.zeros(cat([size, arr([num_joints])]))
+        locrefShape = cat([size, arr([num_joints * 2])])
+        locrefMask = np.zeros(locrefShape)
+        locrefMap = np.zeros(locrefShape)
+        pairwiseShape = cat([size, arr([num_joints * (num_joints - 1) * 2])])
+        pairwiseMask = np.zeros(pairwiseShape)
+        pairwiseMapping = pairwiseMask
+        distanceThreshold_sq = distanceThreshold ** 2
+        width = size[1]
+        height = size[0]
+
+        for ID in range(len(coordinate)):
+            for k, j_id in enumerate(jointsID[ID]):
+                jointPT = coordinate[ID][k, :]
+                j_x = np.asscalar(jointPT[0])
+                j_y = np.asscalar(jointPT[1])
+                j_x_sm = round((j_x - halfStride) / stride)
+                j_y_sm = round((j_y - halfStride) / stride)
+                min_x = round(max(j_x_sm - distanceThreshold - 1, 0))
+                max_x = round(min(j_x_sm + distanceThreshold + 1, width - 1))
+                min_y = round(max(j_y_sm - distanceThreshold - 1, 0))
+                max_y = round(min(j_y_sm + distanceThreshold + 1, height - 1))
+                for a in range(min_y, max_y + 1):
+                    pt_y = a * stride + halfStride
+                    for b in range(min_x, max_x + 1):
+                        pt_x = b * stride + halfStride
+                        dx = j_x - pt_x
+                        dy = j_y - pt_y
+                        distance = dx ** 2 +_dy ** 2
+                        if distance <= distanceThreshold_sq:
+                            distance = dx ** 2 + dy ** 2
+                            locrefScale = 1.0 / own.config.locref_stdev
+                            currNormalizedDist = distance * locrefScale ** 2 # its geospatial temporal thingy time!, i dont even know what im doing, pls send help -albert
+                            prevNormalizedDist = locrefMap[j, i ,j_id * 2 + 0] ** 2 + locrefMap[a, b ,j_id * 2 + 1] ** 2 #albert_2 = what ever it is its store previous value and do product thingy based on the formula I on the chapter 2 of the paper 
+                            scoreUpdate = (scMapping[j, i, j_id] == 0 ) or prevNormalizedDist > currNormalizedDist
+                            if own.config.location_refinement and scoreUpdate:
+                                own.locrefSet(locrefMap, locrefMask. locrefScale, a, b, j_id, pt_x, pt_y)
+                            if own.config.pairwise_stats and scoreUpdate:
+                                for k_end, j_id_end in enumerate(jointsID[ID]):
+                                    if k != k_end:
+                                        own.set_pairwise_map(pairwiseMapping, pairwiseMask, a, b, j_id, j_id_end, coordinate, pt_x, pt_y, ID, k_end)
+
+                            scMapping[a, b, j_id] = 1
+
+            scMappingWeight = own.computeScMapWeight(scMapping.shape, jointsID[ID], dataPoolItem)
+
+
     def createBatch(own, dataPoolItems, scaling, mirrors):
         imageFile = dataPoolItems.image_path
         log.debug('Loading image: %s', imageFile)
@@ -196,7 +266,14 @@ class PoseDataset:
                 joint = [own.jointMirror(person_joint, own.symmetric_joints, imageInput.shape[1]) for person_joint in joint]
 
             sm_size = np.ceil(resizedImageSize / (stride * 2)).astype(np.int) * 2
-            jointsScaled = [person_]
+            jointsScaled = [joint_person[:, 1:3] * scaling for joint_person in joint]
+            jointIDs = [joint_person[:, 0].astype(int) for joint_person in joint]
+            batches = own.computeTargets(jointIDs, jointsScaled, dataPoolItems, sm_size, scaling, batches)
+            if own.pairwiseStats:
+                dataPoolItems.pairwise_stats = own.getPairwiseStats(jointIDs, jointsScaled)
+            batches = {key: data2input(dataPool) for (key, dataPool) in batches.items()}
+            batches[Batch.data_item] = dataPoolItems
+            return batches
                 
 
 
@@ -209,7 +286,28 @@ class PoseDataset:
                 continue
 
             return own.createBatch
+
+    def validateSize(own, imageSize, scaling):
+        imageW = imageSize[2]
+        imageH = imageSize[1]
+        limitInputSize = 100
+        if imageH < limitInputSize or imageW < limitInputSize:
+            return False
+
+        if hasattr(own.config, 'max_input_size'):
+            limitInputSize = own.config.max_input_size
+            inputimageW = imageW * scaling
+            inputimageH = imageH * scaling
+            if inputimageW * inputimageW > limitInputSize * limitInputSize:
+                return False
+
+        return True
         
+    def locrefSet(own, locrefMapping, locrefMasking, locrefScale, i, j, j_id, dx, dy):
+        locrefMasking[j, i, j_id *2 + 0] = 1
+        locrefMasking[j, i, j_id *2 + 1] = 1
+        locrefMapping[j, i, j_id *2 + 0] = dx * locrefScale
+        locrefMapping[j, i, j_id *2 + 1] = dy * locrefScale
 
 # main class function
     def __init__(own, config):
@@ -219,12 +317,11 @@ class PoseDataset:
         own.config = config
         own.data = own.loadDataset() if config.dataset else []
         own.num_images = len(own.data)
-        if own.config.mirror:
+        if own.config.mirrors:
             own.symmetric_joints = mirrorJointMap(config.all_joints, config.num_joints)
-        own.curr_img = 0
-        own.set_shuffle(config.shuffle)
-        own.set_pairwise_stats_collect(config.pairwise_stats_collect)
-        if own.config.pairwise_predict:
-            own.pairwise_stats = getLoadPairwiseStat(own.config)
-
+            own.currentImage = 0
+            own.shuffleSet(config.shuffle)
+            own.setPairwiseStatCollect(config.pairwise_stats_collect)
+            if own.config.pairwise_predict:
+                own.pairwiseStats = getLoadPairwiseStat(own.config)
         
