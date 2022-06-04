@@ -131,7 +131,13 @@ def train():
     #merge loss
     for k, t in losses.items():
         tf.summary.scalar(k, t)
+    """
+    train()
+  File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/training_mpiimodel.py", line 134, in train
     mergedSum = tf.summary.merge_all()
+    """
+    #https://www.tensorflow.org/api_docs/python/tf/compat/v1/summary/merge_all
+    mergedSum = tf.compat.v1.summary.merge_all()
     #state saver for saving model just like when you playing game and save state before playing on the boss stage
     savedVars = tfslim.get_variables_to_restore(include=["resnet_v1"])
     saveStateLoaderEngine = tf.train.Saver(savedVars)

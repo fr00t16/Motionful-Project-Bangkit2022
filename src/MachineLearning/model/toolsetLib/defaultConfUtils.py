@@ -4,8 +4,8 @@ from easydict import EasyDict as ED
 conf = ED()
 
 conf.stride = 8.0
-conf.weigh_part_predictions = False
-conf.weigh_negatives = False
+conf.weight_part_predictions = False
+conf.weight_negatives = False
 conf.fg_fraction = 0.25
 conf.weight_only_present_joints = False
 conf.mean_pixel = [123.68, 116.779, 103.939]
