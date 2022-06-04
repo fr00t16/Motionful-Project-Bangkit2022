@@ -63,12 +63,17 @@ def preloadSetup(BatchesSpecs):
     # a placeholder for temporary data
     #temp = {name: tf.placeholder(tf.float32, shape=spec) for (name, spec) in BatchesSpecs.items()}
     # doesn't work for tensorflow2 need a compatibility layer
+    #due to changes on the tensorflow2 there are some issues regarding placeholder and eager execution, to fix this do 
+    # source : https://stackoverflow.com/questions/56561734/runtimeerror-tf-placeholder-is-not-compatible-with-eager-execution
+    tf.compat.v1.disable_eager_execution()
     temp = {name: tf.compat.v1.placeholder(tf.float32, shape=spec) for (name, spec) in BatchesSpecs.items()}
+    
     name = temp.keys()
     temp_list = list(temp.values())
     # a queue for temporary data
     QUEUE_VOLUME = 20
-    queues = tf.FIFOQueue(QUEUE_VOLUME, [tf.float32]*len(BatchesSpecs))
+    #queues = tf.FIFOQueue(QUEUE_VOLUME, [tf.float32]*len(BatchesSpecs))
+    queues = tf.queue.FIFOQueue(QUEUE_VOLUME, [tf.float32]*len(BatchesSpecs))
     enqueue_op = queues.enqueue(temp_list)
     # a list for temporary data batches on the queue
     batches_list = queues.dequeue()
@@ -117,7 +122,11 @@ def train():
     batchSpec = get_batch_spec(config)
     batches, enqueue_op, temp = preloadSetup(batchSpec)
     #determine Loss function
+    """
+    File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/training_mpiimodel.py", line 125, in train
     losses = pose_net(batches, config)
+    """
+    losses = pose_net(config).train(batches)
     total_loss = losses['total_loss']
     #merge loss
     for k, t in losses.items():

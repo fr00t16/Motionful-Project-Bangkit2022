@@ -122,5 +122,15 @@ class PoseNet: # PoseNet
         intermediate = config.intermediate_supervision
         locref = config.location_refinement
         pairwise = config.pairwise_predict
-        head = own.get_network(batches[Batch.image])
+        """
+train()
+  File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/training_mpiimodel.py", line 129, in train
+    losses = pose_net(config).train(batches)
+  File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/toolsetLib/nnet_toolset_posenet.py", line 125, in train
+    head = own.get_network(batches[Batch.image])
+  File "/usr/lib/python3.10/enum.py", line 437, in __getattr__
+    raise AttributeError(name) from None
+AttributeError: image
+        """
+        head = own.get_network(batches[Batch.inputs])
         return own.partDetectionLoss(head, batches, locref, pairwise, intermediate)
