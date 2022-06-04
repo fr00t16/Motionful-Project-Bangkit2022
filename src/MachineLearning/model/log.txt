@@ -1,4 +1,4 @@
-2022-06-04 05:26:59 Config:
+2022-06-04 05:44:03 Config:
 {'batch_size': 1,
  'crop': False,
  'crop_pad': 0,
@@ -47,6 +47,6 @@
  'weight_negatives': False,
  'weight_only_present_joints': False,
  'weight_part_predictions': False}
-2022-06-04 05:27:08 From /usr/local/lib/python3.10/dist-packages/tensorflow/python/util/dispatch.py:1082: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+2022-06-04 05:44:12 From /usr/local/lib/python3.10/dist-packages/tensorflow/python/util/dispatch.py:1082: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
 Instructions for updating:
 Use `tf.cast` instead.

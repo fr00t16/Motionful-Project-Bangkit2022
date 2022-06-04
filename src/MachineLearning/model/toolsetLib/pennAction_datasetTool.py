@@ -41,7 +41,7 @@ class PenAction(PoseDataset):
             data_item = self.get_training_sample(imidx)
 
             scale = self.get_scale()
-            if not self.is_valid_size(data_item.im_size, scale):
+            if not self.validateSize(data_item.im_size, scale):
                 continue
 
             if self.cfg.video_batch:

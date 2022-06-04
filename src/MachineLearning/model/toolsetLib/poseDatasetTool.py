@@ -93,6 +93,9 @@ class PoseDataset:
 
     def shuffleSet(own, shuffleInput):
         own.shuffle = shuffleInput
+        if not shuffleInput:
+            assert not own.config.mirror, "Shuffling is not supported with mirroring"
+            own.indicesImage = np.arange(own.num_images)
 
     def getPairwiseStats(own, pairwiseStats):
         own.pairwiseStats = pairwiseStats
@@ -164,9 +167,9 @@ class PoseDataset:
         return count
 
     def forwardTrainingSampl(own):
-        if own.curr_img == 0 and own.shuffle:
+        if own.currentImage == 0 and own.shuffle:
             own.shuffleImages()
-        currentImage = own.curr_img
+        currentImage = own.currentImage
         own.currentImage = (own.currentImage + 1) % own.trainingCountSamples()
         imindex = own.indicesImage[currentImage]
         mirror = own.config.mirror and own.mirrored[currentImage]
@@ -293,7 +296,7 @@ class PoseDataset:
             imindex, mirrored = own.forwardTrainingSampl()
             itemsDatapool = own.trainingGetSample(imindex)
             scaling = own.getScale()
-            if not own.is_valid_size(itemsDatapool.image_size, scaling):
+            if not own.validateSize(itemsDatapool.image_size, scaling):
                 continue
 
             return own.createBatch

@@ -88,7 +88,7 @@ def loadnEnqueue(sessions, enqueue_op, coordinate, datasetFeed, temp):
     # load data and enqueue
     
     while not coordinate.should_stop():
-        batch_np = datasetFeed.next_batch()
+        batch_np = datasetFeed.batchNext()
         food = {temp[name]: batch_np[name] for (name, temp) in temp.items()}
         sessions.run(enqueue_op, feed_dict=food)
 
@@ -140,11 +140,13 @@ def train():
     mergedSum = tf.compat.v1.summary.merge_all()
     #state saver for saving model just like when you playing game and save state before playing on the boss stage
     savedVars = tfslim.get_variables_to_restore(include=["resnet_v1"])
-    saveStateLoaderEngine = tf.train.Saver(savedVars)
-    saveStateEngine = tf.train.Saver(max_to_keep=6) #maximum number of states to be saved
+    #https://www.tensorflow.org/api_docs/python/tf/compat/v1/train/Saver
+    saveStateLoaderEngine = tf.compat.v1.train.Saver(savedVars)
+    saveStateEngine = tf.compat.v1.train.Saver(max_to_keep=6) #maximum number of states to be saved
 
     #start the session after the states are managed
-    sessionMain = tf.Session()
+    #https://www.tensorflow.org/api_docs/python/tf/compat/v1/Session
+    sessionMain = tf.compat.v1.Session()
     #preloadCaching started
     coordinate, tensorThread = preloadStart(sessionMain, enqueue_op, datasetFeed, temp)
     #write summary to a file log
