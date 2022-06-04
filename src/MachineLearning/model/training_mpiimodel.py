@@ -86,10 +86,32 @@ def preloadSetup(BatchesSpecs):
 
 def loadnEnqueue(sessions, enqueue_op, coordinate, datasetFeed, temp):
     # load data and enqueue
-    
+    """
+    Exception in thread Thread-1 (loadnEnqueue):
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/threading.py", line 1009, in _bootstrap_inner
+    train()
+  File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/training_mpiimodel.py", line 153, in train
+    self.run()
+  File "/usr/lib/python3.10/threading.py", line 946, in run
+    summary_writer = tf.summary.FileWriter(config.log_dir, sessionMain.graph)
+AttributeError: module 'tensorboard.summary._tf.summary' has no attribute 'FileWriter'
+    self._target(*self._args, **self._kwargs)
+  File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/training_mpiimodel.py", line 92, in loadnEnqueue
+    food = {temp[name]: batch_np[name] for (name, temp) in temp.items()}
+  File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/training_mpiimodel.py", line 92, in <dictcomp>
+    food = {temp[name]: batch_np[name] for (name, temp) in temp.items()}
+  File "/usr/local/lib/python3.10/dist-packages/tensorflow/python/util/traceback_utils.py", line 153, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "/usr/local/lib/python3.10/dist-packages/tensorflow/python/ops/array_ops.py", line 907, in _check_index
+    raise TypeError(_SLICE_TYPE_ERROR + ", got {!r}".format(idx))
+TypeError: Only integers, slices (`:`), ellipsis (`...`), tf.newaxis (`None`) and scalar tf.int32/tf.int64 tensors are valid indices, got <Batch.inputs: 0>
+    """
     while not coordinate.should_stop():
         batch_np = datasetFeed.batchNext()
+
         food = {temp[name]: batch_np[name] for (name, temp) in temp.items()}
+        print(food)
         sessions.run(enqueue_op, feed_dict=food)
 
 def preloadStart(sessions, enqueue_op, datasetFeed, temp):
