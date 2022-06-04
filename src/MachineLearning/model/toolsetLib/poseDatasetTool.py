@@ -5,6 +5,7 @@ from enum import Enum
 from re import I
 from turtle import distance
 import numpy as np
+from pprint import pprint as debugVarsPrint
 from numpy import array as arr
 from numpy import concatenate as cat
 import scipy.io as sciIO
@@ -107,16 +108,26 @@ class PoseDataset:
     def loadDataset(own):
         config = own.config
         fileName = config.dataset
+        print('Loading dataset: ' + fileName)
         matLabData = sciIO.loadmat(fileName) #load Matlab *.mat
         own.rawData = matLabData
-        matLabData = matLabData['dataset']
-        imageCount = matLabData['dataset']
+        """
+        own.data = own.loadDataset() if config.dataset else []
+  File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/toolsetLib/poseDatasetTool.py", line 113, in loadDataset
+    imageCount = matLabData['dataset']
+        """
+        print('DEBUG: current available fields')
+        #debugVarsPrint(vars(matLabData )) #debugging also doesnt work
+        print(dir(matLabData))
+        print('------------------------------')
+        matLabData = matLabData['dataset'] #fault detected
+        imageCount = matLabData.shape[1]
         dataPool = []
         has_gt = True
         for a in range(imageCount):
             sampl = matLabData[0, a]
             items = DataItem() 
-            items.image_id = i
+            items.image_id = a
             items.image_path = sampl[0][0]
             items.image_size = sampl[1][0]
             if len(sampl) > 2:
@@ -317,7 +328,7 @@ class PoseDataset:
         own.config = config
         own.data = own.loadDataset() if config.dataset else []
         own.num_images = len(own.data)
-        if own.config.mirrors:
+        if own.config.mirror:
             own.symmetric_joints = mirrorJointMap(config.all_joints, config.num_joints)
             own.currentImage = 0
             own.shuffleSet(config.shuffle)

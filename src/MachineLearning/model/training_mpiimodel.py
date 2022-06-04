@@ -9,17 +9,17 @@ print('Importing os')
 import os, platform
 print('checking and installing some components')
 if platform.processor() == 'x86_64':
-    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow easydict munkres tf_slim ')
+    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow easydict munkres tf_slim tk')
     #os.system('pip3 install scipy==1.1.0') #fix some scipy.misc issues !+ doesnt work on current version python3.10
 elif platform.processor() == 'aarch64':
-    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow-aarch64 easydict munkres tf_slim ')
+    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow-aarch64 easydict munkres tf_slim tk')
     #os.system('pip3 install scipy==1.1.0') #fix some scipy.misc issues !+ doesnt work on current version python3.10
 else :
     print(platform.processor())
     #raise ValueError("Processor must be 'x86_64' or 'aarch64'")
     print("However if this is an error in this case well try to install all method for Intel64 x86_64 and aarch64")
-    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow easydict munkres tf_slim')
-    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow-aarch64 easydict munkres tf_slim')
+    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow easydict munkres tf_slim tk')
+    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow-aarch64 easydict munkres tf_slim tk')
 
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 print('importing some core components')
@@ -61,7 +61,9 @@ class learningRate(object):
 
 def preloadSetup(BatchesSpecs):
     # a placeholder for temporary data
-    temp = {name: tf.placeholder(tf.float32, shape=spec) for (name, spec) in BatchesSpecs.items()}
+    #temp = {name: tf.placeholder(tf.float32, shape=spec) for (name, spec) in BatchesSpecs.items()}
+    # doesn't work for tensorflow2 need a compatibility layer
+    temp = {name: tf.compat.v1.placeholder(tf.float32, shape=spec) for (name, spec) in BatchesSpecs.items()}
     name = temp.keys()
     temp_list = list(temp.values())
     # a queue for temporary data
@@ -94,7 +96,7 @@ def preloadStart(sessions, enqueue_op, datasetFeed, temp):
     return coordinate, tensorThread
 
 def getOptimizer(lossOP, config):
-    RateofLearning = tf.placeholder(tf.float32, shape=[])
+    RateofLearning = tf.compat.v1.placeholder(tf.float32, shape=[])
     # get optimizer
     if config.optimizer == 'adam':
         optimizer = tf.train.AdamOptimizer(config.learning_rate)
