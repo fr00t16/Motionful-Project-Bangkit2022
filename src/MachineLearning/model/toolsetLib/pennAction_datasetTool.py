@@ -16,50 +16,50 @@ def mergeBatch(batches):
     return res
 
 class PenAction(PoseDataset):
-    def __init__(self, cfg):
+    def __init__(own, cfg):
         cfg.all_joints = [[0], [1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12]]
         cfg.all_joints_names = ["head", "shoulder", "elbow", "wrist", "hip", "knee", "ankle"]
         cfg.num_joints = 13
         super().__init__(cfg)
-        self.add_extra_fields()
+        own.add_extra_fields()
 
-    def add_extra_fields(self):
-        dataset = self.raw_data['dataset']
-        for i in range(self.num_images):
+    def add_extra_fields(own):
+        dataset = own.raw_data['dataset']
+        for i in range(own.num_images):
             raw_item = dataset[0, i]
-            item = self.data[i]
+            item = own.data[i]
             item.seq_id = raw_item[4][0][0]
             item.frame_id = raw_item[5][0][0]
 
-    def mirror_joint_coords(self, joints, image_width):
+    def mirror_joint_coords(own, joints, image_width):
         joints[:, 1] = image_width - joints[:, 1] + 1  # 1-indexed
         return joints
 
-    def next_batch(self):
+    def next_batch(own):
         while True:
-            imidx, mirror = self.next_training_sample()
-            data_item = self.get_training_sample(imidx)
+            imidx, mirror = own.next_training_sample()
+            data_item = own.get_training_sample(imidx)
 
-            scale = self.get_scale()
-            if not self.validateSize(data_item.im_size, scale):
+            scale = own.get_scale()
+            if not own.validateSize(data_item.im_size, scale):
                 continue
 
-            if self.cfg.video_batch:
-                sequences = self.raw_data['sequences']
+            if own.cfg.video_batch:
+                sequences = own.raw_data['sequences']
                 seq_ids = sequences[0, data_item.seq_id][0]
                 num_frames = len(seq_ids)
                 start_frame = data_item.frame_id
-                num_frames_model = self.cfg.batch_size
+                num_frames_model = own.cfg.batch_size
 
                 if start_frame + num_frames_model - 1 >= num_frames:
                     start_frame = num_frames - num_frames_model
 
                 seq_subset = seq_ids[start_frame:start_frame+num_frames_model]
-                data_items = [self.get_training_sample(imidx) for imidx in seq_subset]
-                batches = [self.make_batch(item, scale, mirror) for item in data_items]
+                data_items = [own.get_training_sample(imidx) for imidx in seq_subset]
+                batches = [own.createBatch(item, scale, mirror) for item in data_items]
 
-                batch = merge_batch(batches)
+                batch = mergeBatch(batches)
             else:
-                batch = self.make_batch(data_item, scale, mirror)
+                batch = own.createBatch(data_item, scale, mirror)
 
             return batch

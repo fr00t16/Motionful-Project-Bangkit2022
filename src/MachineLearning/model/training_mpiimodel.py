@@ -53,10 +53,12 @@ class learningRate(object):
     def __init__(own, config): 
         own.steps = config.multi_step
         own.current_step = 0
-    def get_lr(own, iteration):
+    def getLearningRate(own, iteration):
+        print('Getting LearningRate')
         currentLearningRate = own.steps[own.current_step][0]
         if iteration == own.steps[own.current_step][1]:
             own.current_step += 1
+        print('LearningRate: {}'.format(currentLearningRate))
         return currentLearningRate
 
 def preloadSetup(BatchesSpecs):
@@ -107,11 +109,17 @@ AttributeError: module 'tensorboard.summary._tf.summary' has no attribute 'FileW
     raise TypeError(_SLICE_TYPE_ERROR + ", got {!r}".format(idx))
 TypeError: Only integers, slices (`:`), ellipsis (`...`), tf.newaxis (`None`) and scalar tf.int32/tf.int64 tensors are valid indices, got <Batch.inputs: 0>
     """
+    print('loading data and enqueue')
+    print(coordinate)
+    print('=====================[Warning]==================')
+    print('Batch Input Index 0 is unfixable error might happen but it will continues')
+    print('===============================================')
+    count=0
     while not coordinate.should_stop():
         batch_np = datasetFeed.batchNext()
-
+        count=count+1
+        print("Iterating Batch {}", count)
         food = {temp[name]: batch_np[name] for (name, temp) in temp.items()}
-        print(food)
         sessions.run(enqueue_op, feed_dict=food)
 
 def preloadStart(sessions, enqueue_op, datasetFeed, temp):
@@ -125,10 +133,10 @@ def preloadStart(sessions, enqueue_op, datasetFeed, temp):
 def getOptimizer(lossOP, config):
     RateofLearning = tf.compat.v1.placeholder(tf.float32, shape=[])
     # get optimizer
-    if config.optimizer == 'adam':
-        optimizer = tf.train.AdamOptimizer(config.learning_rate)
-    elif config.optimizer == "sgd":
-        optimizer = tf.train.GradientDescentOptimizer(config.learning_rate)
+    if config.optimizer == 'sgd':
+        optimizer = tf.compat.v1.train.MomentumOptimizer(learning_rate=RateofLearning, momentum=0.9)
+    elif config.optimizer == "adam":
+        optimizer = tf.compat.v1.train.AdamOptimizer(config.adam_lr)
     else:
         raise ValueError("Optimizer must be 'adam' or 'sgd'")
     train_op = optimizer.minimize(lossOP)
@@ -151,8 +159,10 @@ def train():
     losses = pose_net(config).train(batches)
     total_loss = losses['total_loss']
     #merge loss
+    print('summary scalar part')
     for k, t in losses.items():
-        tf.summary.scalar(k, t)
+        #tf.summary.scalar(k,t) this caused NoneType on Tensorflow v2? for Fetch
+        tf.compat.v1.summary.scalar(k, t)
     """
     train()
   File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/training_mpiimodel.py", line 134, in train
@@ -160,6 +170,7 @@ def train():
     """
     #https://www.tensorflow.org/api_docs/python/tf/compat/v1/summary/merge_all
     mergedSum = tf.compat.v1.summary.merge_all()
+    print('mergedSum {}', mergedSum)
     #state saver for saving model just like when you playing game and save state before playing on the boss stage
     savedVars = tfslim.get_variables_to_restore(include=["resnet_v1"])
     #https://www.tensorflow.org/api_docs/python/tf/compat/v1/train/Saver
@@ -172,13 +183,13 @@ def train():
     #preloadCaching started
     coordinate, tensorThread = preloadStart(sessionMain, enqueue_op, datasetFeed, temp)
     #write summary to a file log
-    summary_writer = tf.summary.FileWriter(config.log_dir, sessionMain.graph)
+    summary_writer = tf.compat.v1.summary.FileWriter(config.log_dir, sessionMain.graph)
     #setLearningRate
     RateofLearning, train_op = getOptimizer(total_loss, config)
     #start the init session the session
-    sessionMain.run(tf.global_variables_initializer())
+    sessionMain.run(tf.compat.v1.global_variables_initializer())
     #start the required variable for the init session
-    sessionMain.run(tf.local_variables_initializer())
+    sessionMain.run(tf.compat.v1.local_variables_initializer())
     #load the state of the previous state using the determined engine
     saveStateLoaderEngine.restore(sessionMain, config.init_weights)
     maxIteration = int(config.multi_step[-1][1])
@@ -189,8 +200,34 @@ def train():
     #start the training
     for iteration in range(maxIteration+1):
         #get the learning rate
-        learningRate_value = learningRate_gen.get_lr(iteration)
-        [_, loss_value, summary] = sessionMain.run([enqueue_op, total_loss, mergedSum], feed_dict={RateofLearning: learningRate_value})
+        """
+        Traceback (most recent call last):
+  File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/training_mpiimodel.py", line 223, in <module>
+    train()
+  File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/training_mpiimodel.py", line 200, in train
+    [_, loss_value, summary] = sessionMain.run([enqueue_op, total_loss, mergedSum], feed_dict={RateofLearning: learningRate_value})
+  File "/usr/local/lib/python3.10/dist-packages/tensorflow/python/client/session.py", line 967, in run
+    result = self._run(None, fetches, feed_dict, options_ptr,
+  File "/usr/local/lib/python3.10/dist-packages/tensorflow/python/client/session.py", line 1175, in _run
+    fetch_handler = _FetchHandler(
+  File "/usr/local/lib/python3.10/dist-packages/tensorflow/python/client/session.py", line 485, in __init__
+    self._fetch_mapper = _FetchMapper.for_fetch(fetches)
+  File "/usr/local/lib/python3.10/dist-packages/tensorflow/python/client/session.py", line 266, in for_fetch
+    return _ListFetchMapper(fetch)
+  File "/usr/local/lib/python3.10/dist-packages/tensorflow/python/client/session.py", line 378, in __init__
+    self._mappers = [_FetchMapper.for_fetch(fetch) for fetch in fetches]
+  File "/usr/local/lib/python3.10/dist-packages/tensorflow/python/client/session.py", line 378, in <listcomp>
+    self._mappers = [_FetchMapper.for_fetch(fetch) for fetch in fetches]
+  File "/usr/local/lib/python3.10/dist-packages/tensorflow/python/client/session.py", line 262, in for_fetch
+    raise TypeError(f'Argument `fetch` = {fetch} has invalid type '
+TypeError: Argument `fetch` = None has invalid type "NoneType". Cannot be None
+        """
+        learningRate_value = learningRate_gen.getLearningRate(iteration)
+        print("trainOP {}", train_op)
+        print("totalLoss {}", total_loss)
+        print("mergedSum {}", mergedSum)
+        print('starting Session!')
+        [_, loss_value, summary] = sessionMain.run([train_op, total_loss, mergedSum], feed_dict={RateofLearning: learningRate_value})
         cumulative_loss += loss_value
         summary_writer.add_summary(summary, iteration)
 

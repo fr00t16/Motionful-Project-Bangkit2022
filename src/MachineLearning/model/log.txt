@@ -1,4 +1,4 @@
-2022-06-04 05:52:52 Config:
+2022-06-06 11:57:09 Config:
 {'batch_size': 1,
  'crop': False,
  'crop_pad': 0,
@@ -47,6 +47,7 @@
  'weight_negatives': False,
  'weight_only_present_joints': False,
  'weight_part_predictions': False}
-2022-06-04 05:53:01 From /usr/local/lib/python3.10/dist-packages/tensorflow/python/util/dispatch.py:1082: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
+2022-06-06 11:57:20 From /usr/local/lib/python3.10/dist-packages/tensorflow/python/util/dispatch.py:1082: to_float (from tensorflow.python.ops.math_ops) is deprecated and will be removed in a future version.
 Instructions for updating:
 Use `tf.cast` instead.
+2022-06-06 11:57:45 Restoring parameters from weight/resnet/resnet_v1_101.ckpt
