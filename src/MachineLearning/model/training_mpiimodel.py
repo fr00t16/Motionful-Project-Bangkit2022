@@ -75,7 +75,7 @@ def preloadSetup(BatchesSpecs):
     # a queue for temporary data
     QUEUE_VOLUME = 20
     #queues = tf.FIFOQueue(QUEUE_VOLUME, [tf.float32]*len(BatchesSpecs))
-    queues = tf.queue.FIFOQueue(QUEUE_VOLUME, [tf.float32]*len(BatchesSpecs))
+    queues = tf.compat.v1.queue.FIFOQueue(QUEUE_VOLUME, [tf.float32]*len(BatchesSpecs))
     enqueue_op = queues.enqueue(temp_list)
     # a list for temporary data batches on the queue
     batches_list = queues.dequeue()
@@ -124,7 +124,7 @@ TypeError: Only integers, slices (`:`), ellipsis (`...`), tf.newaxis (`None`) an
 
 def preloadStart(sessions, enqueue_op, datasetFeed, temp):
     # start preloading
-    coordinate = tf.train.Coordinator()
+    coordinate = tf.compat.v1.train.Coordinator()
     tensorThread = threading.Thread(target=loadnEnqueue, args=(sessions, enqueue_op, coordinate, datasetFeed, temp))
     # start thread
     tensorThread.start()
@@ -175,7 +175,7 @@ def train():
     savedVars = tfslim.get_variables_to_restore(include=["resnet_v1"])
     #https://www.tensorflow.org/api_docs/python/tf/compat/v1/train/Saver
     saveStateLoaderEngine = tf.compat.v1.train.Saver(savedVars)
-    saveStateEngine = tf.compat.v1.train.Saver(max_to_keep=6) #maximum number of states to be saved
+    saveStateEngine = tf.compat.v1.train.Saver(max_to_keep=5) #maximum number of states to be saved
 
     #start the session after the states are managed
     #https://www.tensorflow.org/api_docs/python/tf/compat/v1/Session
@@ -223,14 +223,14 @@ def train():
 TypeError: Argument `fetch` = None has invalid type "NoneType". Cannot be None
         """
         learningRate_value = learningRate_gen.getLearningRate(iteration)
-        print("trainOP {}", train_op)
-        print("totalLoss {}", total_loss)
-        print("mergedSum {}", mergedSum)
-        print('starting Session!')
+        #print("trainOP {}", train_op)
+        #print("totalLoss {}", total_loss)
+        #print("mergedSum {}", mergedSum)
+        print('Initializing and starting the Session!')
         [_, loss_value, summary] = sessionMain.run([train_op, total_loss, mergedSum], feed_dict={RateofLearning: learningRate_value})
         cumulative_loss += loss_value
         summary_writer.add_summary(summary, iteration)
-
+        print('Displaying Loss')
         #display the loss
         if iteration % displayCurrentIteration == 0:
             #print("iteration: %d, loss: %f" % (iteration, cumulative_loss/displayCurrentIteration))
@@ -243,6 +243,7 @@ TypeError: Argument `fetch` = None has invalid type "NoneType". Cannot be None
 
     #stop the session or kill session
     # stop the tensorThread
+    print('Closing Session!')
     sessionMain.close()
     coordinate.request_stop()
     coordinate.join([thread])

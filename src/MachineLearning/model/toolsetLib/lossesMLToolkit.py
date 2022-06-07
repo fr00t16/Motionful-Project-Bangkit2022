@@ -16,5 +16,6 @@ def huberLoss(label, pred, weight=1.0, k=1.0, scope=None):
         label = math_ops.to_float(label)
         diff = math_ops.subtract(pred, label)
         abs_diff = tf.abs(diff)
+        #abs_diff = tf.compat.v1.losses.absolute_difference(diff)
         losses = tf.compat.v1.where(abs_diff < k, 0.5 * tf.square(diff), k * abs_diff - 0.5 * k ** 2) #huberLoss implementationfrom the reference
         return tf.compat.v1.losses.compute_weighted_loss(losses, weight)

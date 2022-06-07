@@ -120,6 +120,7 @@ ValueError: The reuse parameter must be True or False or None.
         return own.add_test_losses(head)
 
     def addTestLayers(own, head): # head: {'part_pred': ..., 'locref': ..., 'pairwise_pred': ...}
+        #probab = tf.sigmoid(head['part_pred'])
         probab = tf.sigmoid(head['part_pred'])
         output = {'part_prob': probab}
         if own.config.location_refinement:
