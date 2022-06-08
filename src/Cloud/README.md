@@ -4,7 +4,7 @@ Developed by the Bangkit 2022 Cohort Team Cloud Computing Division
 
 # API Documentation
 
-### Register API
+### User API registration
 parameters that must be met
 
 + name
