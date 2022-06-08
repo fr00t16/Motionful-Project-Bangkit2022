@@ -34,6 +34,9 @@ example response  if account created
 ### Login API
 C'soon
 
+### Upload API
+C'soon
+
 
 ## Deploy to server
 
