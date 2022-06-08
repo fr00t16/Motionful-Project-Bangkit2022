@@ -20,11 +20,21 @@ def predLayer(config, input, name, num_outputs):
 def getBatchSpecs(config):
     num_joints = config.num_joints
     batch_size = config.batch_size
+    print('this is the batch size: the default should be 1', batch_size)
+    print(config.batch_size)
+    
     batch_spec = {
         Batch.inputs: [batch_size, None, None, 3],
         Batch.part_score_targets: [batch_size, None, None, num_joints],
         Batch.part_score_weights: [batch_size, None, None, num_joints]
     }
+    """batch_spec = {
+        0: [batch_size, None, None, 3],
+        1: [batch_size, None, None, num_joints],
+        2: [batch_size, None, None, num_joints]
+    }"""
+    print(Batch.inputs, Batch.part_score_targets, Batch.part_score_weights)
+    print("This is the batch spec", batch_spec)
     if config.location_refinement:
         batch_spec[Batch.locref_targets] = [batch_size, None, None, num_joints * 2]
         batch_spec[Batch.locref_mask] = [batch_size, None, None, num_joints * 2]
@@ -83,6 +93,7 @@ class PoseNet: # PoseNet
     raise ValueError("The reuse parameter must be True or False or None.")
 ValueError: The reuse parameter must be True or False or None.
         """
+        """
         print('reuse var')
         print(reuse)
         print('no_interm')
@@ -96,6 +107,7 @@ ValueError: The reuse parameter must be True or False or None.
         print('scope')
         print(scope)
         print('-----------')
+        """
         with tf.compat.v1.variable_scope(scope, reuse=reuse):
             out['part_pred'] = predLayer(config, features, 'part_pred', config.num_joints)
             if config.location_refinement:
@@ -189,7 +201,13 @@ AttributeError: 'EasyDict' object has no attribute 'weight_part_pred'. Did you m
         intermediate = config.intermediate_supervision
         locref = config.location_refinement
         pairwise = config.pairwise_predict
+        print(config)
+        print(intermediate)
+        print(locref)
+        print(pairwise)
+        print('batches', batches)
         """
+
 train()
   File "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/MachineLearning/model/training_mpiimodel.py", line 129, in train
     losses = pose_net(config).train(batches)
@@ -200,4 +218,5 @@ train()
 AttributeError: image
         """
         head = own.get_network(batches[Batch.inputs])
+        print("head", head)
         return own.partDetectionLoss(head, batches, locref, pairwise, intermediate)

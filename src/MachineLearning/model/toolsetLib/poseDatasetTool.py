@@ -1,7 +1,7 @@
 from ast import Num
 import logging as log
 import random as rnd
-from enum import Enum
+from enum import Enum as enm
 from re import I
 from turtle import distance
 import numpy as np
@@ -13,8 +13,10 @@ import scipy.io as sciIO
 # This doesn't work due to https://stackoverflow.com/questions/9298665/cannot-import-scipy-misc-imread
 from skimage.transform import resize as imresize
 from matplotlib.pyplot import imread
+#from imageio import imread, imresize
 
-class Batch(Enum):
+
+class Batch(enm):
     inputs = 0
     part_score_targets = 1
     part_score_weights = 2
@@ -24,22 +26,27 @@ class Batch(Enum):
     pairwise_mask = 6
     data_item = 7
 
+## testing class index
+print('Index Class Batch')
+print(Batch.inputs)
+print(Batch.part_score_targets)
+print(Batch.part_score_weights)
+print(Batch.locref_targets)
 
-def extendCrop(crop, crop_pad, image_size):
-    crop[0] = max(crop[0] - crop_pad, 0)
-    crop[1] = max(crop[1] - crop_pad, 0)
-    crop[2] = min(crop[2] + crop_pad, image_size[2] - 1)
-    crop[3] = min(crop[3] + crop_pad, image_size[1] - 1)
+def extendCrop(crop, cropPadding, imageSize):
+    crop[0] = max(crop[0] - cropPadding, 0)
+    crop[1] = max(crop[1] - cropPadding, 0)
+    crop[2] = min(crop[2] + cropPadding, imageSize[2] - 1)
+    crop[3] = min(crop[3] + cropPadding, imageSize[1] - 1)
     return crop
 
-def mirrorJointMap(all_joints, num_joints):
-    res = np.arange(num_joints)
-    symmetric_joints = [p for p in all_joints if len(p) == 2]
-    for pair in symmetric_joints:
-        res[pair[0]] = pair[1]
-        res[pair[1]] = pair[0]
-    return res
-
+def mirrorJointMap(allJoints, jointsCount):
+    reso = np.arange(jointsCount)
+    symmJoints = [a for a in allJoints if len(a) == 2]
+    for pair in symmJoints:
+        reso[pair[0]] = pair[1]
+        reso[pair[1]] = pair[0]
+    return reso
 
 
 def getPairwiseStats(joint_id, coords):
@@ -81,7 +88,7 @@ def getIndexPairwise(j_id, j_id_end, num_joints):
     return (num_joints - 1) * j_id + j_id_end - int(j_id < j_id_end)
 
 class DataItem:
-    print('stub function DataItem()')
+    print('stub class DataItem')
     pass
 
 class PoseDataset:
@@ -261,7 +268,9 @@ class PoseDataset:
         log.debug('Mirror: %s', mirrors)
         log.debug('Image size: %s', dataPoolItems.image_size)
         log.debug('Crop: %s', dataPoolItems.crop)
+        print('imageLoading', imageFile)
         imageInput = imread(imageFile, mode='RGB') #RGB usually jpg not png with RGBA
+        #imageInput = imread(imageFile, mode='RGB') #RGB usually jpg not png with RGBA
         if own.has_gt:
             joint = np.copy(dataPoolItems.joint)
         if own.config.crop:
@@ -269,6 +278,7 @@ class PoseDataset:
             imageInput = imageInput[crop[1]:crop[3], crop[0]:crop[2] + 1, :]
             if own.has_gt:
                 joint[:, 1:3] -= crop[0:2].astype(joint.dtype)
+        print('resizing Image', imageInput)
         imageResize = imresize(imageInput, scaling) if scaling != 1 else imageInput
         resizedImageSize = arr(imageResize.shape[0:2])
         if mirrors:

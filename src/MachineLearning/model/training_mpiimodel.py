@@ -9,17 +9,17 @@ print('Importing os')
 import os, platform
 print('checking and installing some components')
 if platform.processor() == 'x86_64':
-    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow easydict munkres tf_slim tk')
-    #os.system('pip3 install scipy==1.1.0') #fix some scipy.misc issues !+ doesnt work on current version python3.10
+    os.system('pip3 install imageio scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow easydict munkres tf_slim tk')
+    #os.system('pip3 install scipy') #fix some scipy.misc issues !+ doesnt work on current version python3.10
 elif platform.processor() == 'aarch64':
-    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow-aarch64 easydict munkres tf_slim tk')
-    #os.system('pip3 install scipy==1.1.0') #fix some scipy.misc issues !+ doesnt work on current version python3.10
+    os.system('pip3 install imageio scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow-aarch64 easydict munkres tf_slim tk')
+    #os.system('pip3 install scipy') #fix some scipy.misc issues !+ doesnt work on current version python3.10
 else :
     print(platform.processor())
     #raise ValueError("Processor must be 'x86_64' or 'aarch64'")
     print("However if this is an error in this case well try to install all method for Intel64 x86_64 and aarch64")
-    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow easydict munkres tf_slim tk')
-    os.system('pip3 install scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow-aarch64 easydict munkres tf_slim tk')
+    os.system('pip3 install imageio scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow easydict munkres tf_slim tk')
+    os.system('pip3 install imageio scipy numpy scikit-image pillow pyyaml matplotlib cython tensorflow-aarch64 easydict munkres tf_slim tk')
 
 os.environ['PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION'] = 'python'
 print('importing some core components')
@@ -29,6 +29,8 @@ from xml.etree.ElementInclude import include
 import numpy as np
 print('importing tensorflow')
 import tensorflow as tf
+print('importing tensorflow debugger')
+from tensorflow.python import debug as tf_debug
 print('disabling CUDA support...')
 #TF_CUDNN_USE_AUTOTUNE=0 CUDA_VISIBLE_DEVICES=0
 os.environ['TF_CUDNN_USE_AUTOTUNE'] = '0'
@@ -118,8 +120,9 @@ TypeError: Only integers, slices (`:`), ellipsis (`...`), tf.newaxis (`None`) an
     while not coordinate.should_stop():
         batch_np = datasetFeed.batchNext()
         count=count+1
-        print("Iterating Batch {}", count)
+        print("Iterating Batch ======================", count)
         food = {temp[name]: batch_np[name] for (name, temp) in temp.items()}
+        print("Iterating Batch ======================", count)
         sessions.run(enqueue_op, feed_dict=food)
 
 def preloadStart(sessions, enqueue_op, datasetFeed, temp):
@@ -181,12 +184,14 @@ def train():
     #https://www.tensorflow.org/api_docs/python/tf/compat/v1/Session
     sessionMain = tf.compat.v1.Session()
     #preloadCaching started
+    print('preloadCaching started')
     coordinate, tensorThread = preloadStart(sessionMain, enqueue_op, datasetFeed, temp)
     #write summary to a file log
     summary_writer = tf.compat.v1.summary.FileWriter(config.log_dir, sessionMain.graph)
     #setLearningRate
     RateofLearning, train_op = getOptimizer(total_loss, config)
     #start the init session the session
+    print('Initializing Variables global and local')
     sessionMain.run(tf.compat.v1.global_variables_initializer())
     #start the required variable for the init session
     sessionMain.run(tf.compat.v1.local_variables_initializer())
@@ -198,7 +203,10 @@ def train():
     cumulative_loss = 0.0
     learningRate_gen = learningRate(config)
     #start the training
+    countIteration=0
     for iteration in range(maxIteration+1):
+        countIteration=countIteration+1
+        print('Current Learning Iteration', countIteration)
         #get the learning rate
         """
         Traceback (most recent call last):
@@ -223,9 +231,6 @@ def train():
 TypeError: Argument `fetch` = None has invalid type "NoneType". Cannot be None
         """
         learningRate_value = learningRate_gen.getLearningRate(iteration)
-        #print("trainOP {}", train_op)
-        #print("totalLoss {}", total_loss)
-        #print("mergedSum {}", mergedSum)
         print('Initializing and starting the Session!')
         [_, loss_value, summary] = sessionMain.run([train_op, total_loss, mergedSum], feed_dict={RateofLearning: learningRate_value})
         cumulative_loss += loss_value

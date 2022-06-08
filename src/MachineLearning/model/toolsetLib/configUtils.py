@@ -3,7 +3,7 @@ import os, sys, time, threading, pprint, logging, yaml
 from easydict import EasyDict as ED
 import toolsetLib.defaultConfUtils
 #load default configuration
-conf = toolsetLib.defaultConfUtils.conf
+conf = toolsetLib.defaultConfUtils.config
 # merge dict b into dict a with source 
 def _mergedict_a_into_b(a, b):
     if type(a) is not ED:
@@ -13,6 +13,9 @@ def _mergedict_a_into_b(a, b):
         if type(v) is ED:
             try:
                 _mergedict_a_into_b(a[k], b[k])
+                print('reading Config')
+                print(k)
+                print(v)
             except:
                 print('Error under config key: {}'.format(k))
                 raise
