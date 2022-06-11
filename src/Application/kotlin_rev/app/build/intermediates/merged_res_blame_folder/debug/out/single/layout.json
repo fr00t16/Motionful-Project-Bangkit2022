@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_dashboard.xml",
+        "source": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/res/layout/fragment_dashboard.xml"
+    },
+    {
+        "merged": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_profile.xml",
+        "source": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/res/layout/fragment_profile.xml"
+    },
+    {
+        "merged": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_notifications.xml",
+        "source": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/res/layout/fragment_notifications.xml"
+    },
+    {
+        "merged": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/activity_main.xml",
+        "source": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/res/layout/activity_main.xml"
+    },
+    {
+        "merged": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_home.xml",
+        "source": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/res/layout/fragment_home.xml"
+    },
+    {
+        "merged": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/kontak_item.xml",
+        "source": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/res/layout/kontak_item.xml"
+    },
+    {
+        "merged": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/activity_detail_kontak.xml",
+        "source": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/res/layout/activity_detail_kontak.xml"
+    },
+    {
+        "merged": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_follow.xml",
+        "source": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/res/layout/fragment_follow.xml"
+    },
+    {
+        "merged": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/activity_add.xml",
+        "source": "/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/res/layout/activity_add.xml"
+    }
+]

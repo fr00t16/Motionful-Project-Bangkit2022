@@ -1,0 +1,95 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.dicoding.picodiploma.mybottomnavigation"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+8-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="30" />
+9-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:5:5-67
+11-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:5:22-64
+12
+13    <uses-feature android:name="android.hardware.camera" />
+13-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:7:5-60
+13-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:7:19-57
+14
+15    <uses-permission android:name="android.permission.CAMERA" />
+15-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:9:5-65
+15-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:9:22-62
+16
+17    <application
+17-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:11:5-30:19
+18        android:allowBackup="true"
+18-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:12:9-35
+19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+19-->[androidx.core:core:1.6.0] /home/albertstarfield/.gradle/caches/transforms-3/edeb430ac0b0bea9c609d4daffe0d06e/transformed/core-1.6.0/AndroidManifest.xml:24:18-86
+20        android:debuggable="true"
+21        android:icon="@mipmap/ic_launcher"
+21-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:13:9-43
+22        android:label="@string/app_name"
+22-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:14:9-41
+23        android:roundIcon="@mipmap/ic_launcher_round"
+23-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:15:9-54
+24        android:supportsRtl="true"
+24-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:16:9-35
+25        android:testOnly="true"
+26        android:theme="@style/Theme.MyBottomNavigation" >
+26-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:17:9-56
+27        <activity
+27-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:18:9-20:40
+28            android:name="com.dicoding.picodiploma.mybottomnavigation.ui.dashboard.AddActivity"
+28-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:19:13-53
+29            android:exported="false" />
+29-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:20:13-37
+30        <activity
+30-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:21:9-29:20
+31            android:name="com.dicoding.picodiploma.mybottomnavigation.MainActivity"
+31-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:22:13-41
+32            android:label="@string/app_name" >
+32-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:23:13-45
+33            <intent-filter>
+33-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:24:13-28:29
+34                <action android:name="android.intent.action.MAIN" />
+34-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:25:17-69
+34-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:25:25-66
+35
+36                <category android:name="android.intent.category.LAUNCHER" />
+36-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:27:17-77
+36-->/home/albertstarfield/Documents/FileSekolah13(TE)/bangkit_error/runtime/Motionful-Project-Bangkit2022/src/Application/kotlin_rev/app/src/main/AndroidManifest.xml:27:27-74
+37            </intent-filter>
+38        </activity>
+39
+40        <service
+40-->[androidx.camera:camera-camera2:1.1.0-beta02] /home/albertstarfield/.gradle/caches/transforms-3/6bb4a960ffa008915691688c66f45a32/transformed/jetified-camera-camera2-1.1.0-beta02/AndroidManifest.xml:26:9-35:19
+41            android:name="androidx.camera.core.impl.MetadataHolderService"
+41-->[androidx.camera:camera-camera2:1.1.0-beta02] /home/albertstarfield/.gradle/caches/transforms-3/6bb4a960ffa008915691688c66f45a32/transformed/jetified-camera-camera2-1.1.0-beta02/AndroidManifest.xml:27:13-75
+42            android:enabled="false"
+42-->[androidx.camera:camera-camera2:1.1.0-beta02] /home/albertstarfield/.gradle/caches/transforms-3/6bb4a960ffa008915691688c66f45a32/transformed/jetified-camera-camera2-1.1.0-beta02/AndroidManifest.xml:28:13-36
+43            android:exported="false" >
+43-->[androidx.camera:camera-camera2:1.1.0-beta02] /home/albertstarfield/.gradle/caches/transforms-3/6bb4a960ffa008915691688c66f45a32/transformed/jetified-camera-camera2-1.1.0-beta02/AndroidManifest.xml:29:13-37
+44            <meta-data
+44-->[androidx.camera:camera-camera2:1.1.0-beta02] /home/albertstarfield/.gradle/caches/transforms-3/6bb4a960ffa008915691688c66f45a32/transformed/jetified-camera-camera2-1.1.0-beta02/AndroidManifest.xml:32:13-34:89
+45                android:name="androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER"
+45-->[androidx.camera:camera-camera2:1.1.0-beta02] /home/albertstarfield/.gradle/caches/transforms-3/6bb4a960ffa008915691688c66f45a32/transformed/jetified-camera-camera2-1.1.0-beta02/AndroidManifest.xml:33:17-103
+46                android:value="androidx.camera.camera2.Camera2Config$DefaultProvider" />
+46-->[androidx.camera:camera-camera2:1.1.0-beta02] /home/albertstarfield/.gradle/caches/transforms-3/6bb4a960ffa008915691688c66f45a32/transformed/jetified-camera-camera2-1.1.0-beta02/AndroidManifest.xml:34:17-86
+47        </service>
+48
+49        <provider
+49-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/albertstarfield/.gradle/caches/transforms-3/bf45f71de68ca20394b1a4800260ad51/transformed/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:25:9-29:43
+50            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+50-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/albertstarfield/.gradle/caches/transforms-3/bf45f71de68ca20394b1a4800260ad51/transformed/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:26:13-79
+51            android:authorities="com.dicoding.picodiploma.mybottomnavigation.lifecycle-process"
+51-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/albertstarfield/.gradle/caches/transforms-3/bf45f71de68ca20394b1a4800260ad51/transformed/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:27:13-69
+52            android:exported="false"
+52-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/albertstarfield/.gradle/caches/transforms-3/bf45f71de68ca20394b1a4800260ad51/transformed/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:28:13-37
+53            android:multiprocess="true" />
+53-->[androidx.lifecycle:lifecycle-process:2.2.0] /home/albertstarfield/.gradle/caches/transforms-3/bf45f71de68ca20394b1a4800260ad51/transformed/jetified-lifecycle-process-2.2.0/AndroidManifest.xml:29:13-40
+54    </application>
+55
+56</manifest>

@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/kotlin_rev.iml" filepath="$PROJECT_DIR$/.idea/modules/kotlin_rev.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MyBottomNavigation.iml" filepath="$PROJECT_DIR$/.idea/modules/MyBottomNavigation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MyBottomNavigation.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MyBottomNavigation.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MyBottomNavigation.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MyBottomNavigation.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MyBottomNavigation.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MyBottomNavigation.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MyBottomNavigation.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MyBottomNavigation.app.unitTest.iml" />
     </modules>
   </component>
 </project>
