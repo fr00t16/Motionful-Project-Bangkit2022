@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">LoginWithAnimation</string>
+    <string name="signup">Daftar</string>
+    <string name="login">Masuk</string>
+    <string name="message_welcome_page">Update ceritamu disini</string>
+    <string name="title_welcome_page">Selamat datang</string>
+    <string name="title_signup_page">Lengkapi data dirimu di bawah ini ya</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">Masukkan dulu datamu ya</string>
+    <string name="title_login_page">Sudah siap untuk upgrade skill?</string>
+    <string name="name">Nama</string>
+    <string name="copyright">© 2021 Dicoding</string>
+    <string name="message_main_page">Selamat Datang</string>
+    <string name="greeting">Halo %1$s,</string>
+    <string name="logout">Keluar</string>
+    <string name="camera">camera</string>
+    <string name="gallery">gallery</string>
+    <string name="upload">upload</string>
+    <string name="add_story">Add Story</string>
+    <string name="passinput">Maks 6</string>
+    <string name="predict">Predict</string>
+    <string name="please_input_image">Please Input Image</string>
+</resources>

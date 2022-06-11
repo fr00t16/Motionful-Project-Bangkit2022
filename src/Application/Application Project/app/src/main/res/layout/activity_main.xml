@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cv_prevImg"
+        android:layout_width="316dp"
+        android:layout_height="316dp"
+        android:layout_margin="20dp"
+        app:cardCornerRadius="15dp"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="@color/lightgreen"
+        app:strokeWidth="2dp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="49dp"
+        >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="25dp"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/previewImageView"
+            android:layout_width="288dp"
+            android:layout_height="288dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/uploadimage" />
+    </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <Button
+        android:id="@+id/cameraButton"
+        android:layout_width="196dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/btn_primary"
+        android:fontFamily="@font/poppins"
+        android:text="@string/camera"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/uploadButton"
+        app:layout_constraintEnd_toStartOf="@+id/galleryButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_prevImg"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/galleryButton"
+        android:layout_width="196dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/btn_primary"
+        android:fontFamily="@font/poppins"
+        android:text="@string/gallery"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/cameraButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cameraButton"
+        app:layout_constraintTop_toTopOf="@+id/cameraButton"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/uploadButton"
+        android:layout_width="397dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/btn_primary"
+        android:fontFamily="@font/poppins"
+        android:text="@string/predict"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv_prevImg"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="380dp"
+        android:layout_height="214dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="2dp"
+        android:backgroundTint="@color/lightgreen"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="0dp">
+
+            <TextView
+                android:id="@+id/yogaText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="48dp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_horizontal"
+                android:text="@string/please_input_image"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.073"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <Button
+                android:id="@+id/uplButton"
+                android:layout_width="304dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="36dp"
+                android:background="@drawable/btn_primary"
+                android:fontFamily="@font/poppins"
+                android:gravity="center"
+                android:text="@string/upload"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
